@@ -27,10 +27,17 @@ class LineItemsController < ApplicationController
   # POST /line_items.json
   def create
     product = Product.find(params[:product_id])
-    @line_item = @cart.line_items.build(product: product)
-
+    
+    # check if product exists in cart, if not add it else add to quantity
+    @line_item = @cart.line_items.select { |line_item| line_item.product == product }.first
+    if @line_item.nil?
+      @line_item = @cart.line_items.build(product: product)
+    end    
+    @line_item.increment(:quantity, by = 1)
+ 
     respond_to do |format|
       if @line_item.save
+        session[:last_product_page] = request.env['HTTP_REFERER'] || root_url
         format.html { redirect_to @line_item.cart, 
           notice: 'Line item was successfully created.' }
         format.json { render action: 'show', 
@@ -57,15 +64,36 @@ class LineItemsController < ApplicationController
     end
   end
 
+  #original destroy
+  # def destroy
+  #   @line_item.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to line_items_url }
+  #     format.json { head :no_content }
+  #   end
+  # end
+
+
   # DELETE /line_items/1
   # DELETE /line_items/1.json
+  # remove from cart
   def destroy
     @line_item.destroy
     respond_to do |format|
-      format.html { redirect_to line_items_url }
+      format.html { redirect_to @line_item.cart, 
+          alert: 'Line item was successfully removed.' }
+      # format.html { redirect_to line_items_url }
       format.json { head :no_content }
     end
   end
+
+  # def remove_from_cart
+  #   @line_item.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to @line_item.cart }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -75,6 +103,17 @@ class LineItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def line_item_params
-      params.require(:line_item).permit(:product_id, :cart_id)
+      params.require(:line_item).permit(:product_id, :cart_id, :quantity)
     end
+
+    # def line_item_exists
+    #   unless @line_item.include?(@cart)
+    #     @line_item.increment(:quantity, by = 1)
+    #     @line_item.save
+    #   end
+    # end
+
+# end
+
+
 end

@@ -1,6 +1,7 @@
 ECommerce::Application.routes.draw do
   root 'stores#index'
   resources :products
+
   # resources :stores
 
   resources :line_items
@@ -14,6 +15,7 @@ ECommerce::Application.routes.draw do
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
+  # delete 'line_items/:id' => 'line_items#remove_from_cart'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
