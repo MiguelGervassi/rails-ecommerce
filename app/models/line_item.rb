@@ -11,5 +11,4 @@ class LineItem < ActiveRecord::Base
   def full_price
     product.price*quantity
   end
-
 end

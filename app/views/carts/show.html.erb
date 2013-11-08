@@ -1,17 +1,4 @@
-<% if notice %>
-  <p id="notice"><%= notice %></p>
-<% elsif alert %>
-  <p id="alert"><%= alert %></p>
-<% end %>
-
 <h2>Your Pragmatic Cart</h2>
-<!-- <ul>
-  <% @cart.line_items.each do |item| %>
-    <li><%= item.product.name %>
-    <td><%= link_to 'Remove', item, method: :delete, data: { confirm: 'Are you sure?' } %></td></li>
-  <% end %>
-</ul>
- -->
 <% if @cart.line_items.empty? %>
   You do not have anything in your cart!</p>
 <% else %>
@@ -19,21 +6,26 @@
     <tr>
       <td>Product</td>
       <td>Qty</td>
+      <td>Delete</td>
       <td>Unit Price</td>
       <td>Full Price</td>
     </tr>
   <% @cart.line_items.each do |item| %>
     <tr>
       <td><%= item.product.name %></td>
-      <td><%= item.quantity %></td>
+      <%= form_for(item) do |f| %>
+        <td><%= f.text_field :quantity, :size => 2 %></td>
+      <td><%= link_to 'Remove', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       <td><%= number_to_currency(item.product.price) %></td>
       <td><%= number_to_currency(item.full_price) %></td>
-      <td><%= link_to '[x]', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <td><%= f.submit 'Update' %></td>
+<% end %>
     </tr>
   <% end %>
     <tr>
     	<td></td>
     	<td></td>
+      <td></td>
     	<td>Total:  </td>
     	<td><%= number_to_currency(@cart.total_price) %></td>
     </tr>
@@ -41,8 +33,16 @@
 <% end %>
 
 <% if session[:last_product_page] %>
-  <%= link_to "Continue Shopping", session[:last_product_page] %> |
+  <%= link_to "Continue Shopping", session[:last_product_page] %>
 <% end %>
-<!-- <%= link_to 'Back', root_path %> | -->
-<%= link_to 'Checkout', root_path %>
+
+<%= form_tag APP_CONFIG[:paypal_url] do %>
+  <%= hidden_field_tag :cmd, "_s-xclick" %>
+  <%= hidden_field_tag :encrypted, @cart.paypal_encrypted(root_url, payment_notifications_url(:secret => APP_CONFIG[:paypal_secret])) %>
+  <p><%= submit_tag "Checkout" %></p>
+<% end %>
+
+
+
+
 

@@ -1,10 +1,8 @@
-<% if notice %>
-<p id="notice"><%= notice %></p>
-<% end %>
 <%= link_to 'Show Cart', cart_path(@cart) %>
+(<%= @cart.line_items.to_a.sum(&:quantity) %>)
 <h1>Your Pragmatic Catalog</h1>
 
-<% cache ['store', @latest_products] do %>
+<% cache ['store', Product.latest] do %>
   <% @products.each do |product| %>
     <% cache ['entry', product] do %>
       <div class="entry">

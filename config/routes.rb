@@ -1,4 +1,6 @@
 ECommerce::Application.routes.draw do
+  resources :payment_notifications
+
   root 'stores#index'
   resources :products
 
