@@ -10,18 +10,19 @@
       <td>Unit Price</td>
       <td>Full Price</td>
     </tr>
-  <% @cart.line_items.each do |item| %>
-    <tr>
-      <td><%= item.product.name %></td>
-      <%= form_for(item) do |f| %>
-        <td><%= f.text_field :quantity, :size => 2 %></td>
-      <td><%= link_to 'Remove', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      <td><%= number_to_currency(item.product.price) %></td>
-      <td><%= number_to_currency(item.full_price) %></td>
-      <td><%= f.submit 'Update' %></td>
-<% end %>
-    </tr>
-  <% end %>
+  <%= form_for :line_item, :action => :update_multiple, :url => update_multiple_line_items_path, :html => { :method => :put } do |f| %>
+    <% for item in @cart.line_items %>
+      <tr>
+        <%= hidden_field_tag "ids[]", item.id %>  
+        <!-- <%= f.hidden_field :quantity, :value => item.quantity %>   -->        
+        <td><%= item.product.name %></td>
+        <td><%= text_field_tag "quantities[]", item.quantity, :size => 2 %></td>
+
+        <td><%= link_to 'Remove', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= number_to_currency(item.product.price) %></td>
+        <td><%= number_to_currency(item.full_price) %></td>
+      </tr>
+    <% end %>
     <tr>
     	<td></td>
     	<td></td>
@@ -30,16 +31,16 @@
     	<td><%= number_to_currency(@cart.total_price) %></td>
     </tr>
   </table>
+    <%= f.submit 'Update Cart' %>
+  <% end %>
+  <%= form_tag APP_CONFIG[:paypal_url] do %>
+    <%= hidden_field_tag :cmd, "_s-xclick" %>
+    <%= hidden_field_tag :encrypted, @cart.paypal_encrypted(root_url, payment_notifications_url(:secret => APP_CONFIG[:paypal_secret])) %>
+    <%= submit_tag "Checkout" %></p>
+  <% end %>
 <% end %>
-
 <% if session[:last_product_page] %>
   <%= link_to "Continue Shopping", session[:last_product_page] %>
-<% end %>
-
-<%= form_tag APP_CONFIG[:paypal_url] do %>
-  <%= hidden_field_tag :cmd, "_s-xclick" %>
-  <%= hidden_field_tag :encrypted, @cart.paypal_encrypted(root_url, payment_notifications_url(:secret => APP_CONFIG[:paypal_secret])) %>
-  <p><%= submit_tag "Checkout" %></p>
 <% end %>
 
 

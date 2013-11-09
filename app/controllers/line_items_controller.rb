@@ -32,7 +32,8 @@ class LineItemsController < ApplicationController
     if @line_item.nil?
       @line_item = @cart.line_items.build(product: product)
     end    
-    @line_item.increment(:quantity, by = 1)
+    @quantity = params[:quantity].to_i
+    @line_item.increment(:quantity, by = @quantity)
  
     respond_to do |format|
       if @line_item.save
@@ -63,6 +64,8 @@ class LineItemsController < ApplicationController
   #   end
   # end
 
+
+
   def update
     respond_to do |format|
       if @line_item.update(line_item_params)
@@ -75,14 +78,18 @@ class LineItemsController < ApplicationController
     end
   end
 
-  #original destroy
-  # def destroy
-  #   @line_item.destroy
-  #   respond_to do |format|
-  #     format.html { redirect_to line_items_url }
-  #     format.json { head :no_content }
-  #   end
-  # end
+  def edit_multiple
+    @line_items = LineItem.find(params[:ids])
+  end
+
+  def update_multiple
+    @line_items = LineItem.find(params[:ids])
+    @quantities = params[:quantities]
+    @line_items.zip(@quantities) do |line_item, quantity|
+      line_item.update_attributes!(quantity: quantity)
+    end 
+    redirect_to @line_items.first.cart, notice: "Updated Cart Successfully!"
+  end
 
 
   # DELETE /line_items/1
@@ -93,7 +100,6 @@ class LineItemsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to @line_item.cart, 
           alert: 'Line item was successfully removed.' }
-      # format.html { redirect_to line_items_url }
       format.json { head :no_content }
     end
   end

@@ -17,5 +17,13 @@
   <%= @product.description %>
 </p>
 
+<%= form_tag line_items_path(product_id: @product)  do %>
+<%= text_field_tag :quantity, '1', size: 4 %>
+<%= submit_tag 'Add to Cart' %>
+<% end %>     
+<%= link_to "Back", root_path %>
+
+<!-- 
 <%= link_to 'Edit', edit_product_path(@product) %> |
 <%= link_to 'Back', products_path %>
+ -->

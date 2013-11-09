@@ -4,9 +4,16 @@ ECommerce::Application.routes.draw do
   root 'stores#index'
   resources :products
 
+  resources :line_items do
+    collection do 
+      post 'edit_multiple'
+      put 'update_multiple'
+    end
+  end
+
   # resources :stores
 
-  resources :line_items
+  # resources :line_items
   resources :carts
 
   # The priority is based upon order of creation: first created -> highest priority.
