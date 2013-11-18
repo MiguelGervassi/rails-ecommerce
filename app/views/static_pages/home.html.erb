@@ -1,0 +1,26 @@
+<div style="float:right;"><%= link_to 'Show Cart', cart_path(@cart) %>
+(<%= @cart.line_items.to_a.sum(&:quantity) %>)</div>
+<h1>Your Pragmatic Catalog</h1>
+
+<table>
+  <% cache ['store', Product.latest] do %>
+    <% @products.in_groups_of(3, false).each do |group| %>
+      <tr>
+      <div class="row">
+        <div class="three columns">
+          <% group.each do |product| %>
+            <% cache ['item', product] do %>
+              <td width="20%">
+              <div class="item">
+                <%= image_tag product.photo.url(:small) %>
+                <h6><%= link_to product.name, product_path(product) %></h6>
+              </div>
+              </td>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
