@@ -19,23 +19,50 @@ tr.cart-col-title {
 /* end cart display */
 
 
+/* decorate product display with galleries */
+
+tr.product-gallery-grid {
+  td {
+    width: 250px;
+    height: 150px;
+    padding-top: 40px;
+    vertical-align: middle;
+    text-align: center;
+    padding-bottom: 10px;
+    border: 1;
+  }
+}
+
+
+div.product-gallery {
+  display: table-cell;
+  vertical-align: bottom;
+  position: left;  
+  width: 250px;
+  height: 150px;
+}
+
+
+/* end decoration */
+
 
 /* div for item display */
 
-div.item {  
-  display: inline;
-  padding-right: 100px;
+tr.product-grid td {  
+  width: 250px;
+  height: 150px;
+  padding-top: 40px;
+  vertical-align: middle;
+  text-align: center;
+  padding-bottom: 10px;
 }
 
-div.row {  
-  padding-top: 10px;
-}
-
-
-h5 {
-
-  display: inline;  
-
+div.product {
+  display: table-cell;
+  vertical-align: bottom;
+  position: relative;  
+  width: 250px;
+  height: 150px;
 }
 
 /* end of item display */

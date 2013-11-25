@@ -4,22 +4,20 @@
 
 <table>
   <% cache ['store', Product.latest] do %>
-    <% @products.in_groups_of(3, false).each do |group| %>
-      <tr>
-      <div class="row">
-        <div class="three columns">
+    <% @products.in_groups_of(4, false).each do |group| %>
+      <tr class="product-grid">
           <% group.each do |product| %>
             <% cache ['item', product] do %>
-              <td width="20%">
-              <div class="item">
-                <%= image_tag product.photo.url(:small) %>
-                <h6><%= link_to product.name, product_path(product) %></h6>
-              </div>
+              <td>
+                <div class="product">
+                <%=  if !product.gallery.photos.first.nil?
+                  image_tag product.gallery.photos.first.photo.url(:small)
+                end %>
+                </div>
+                <h5><%= link_to product.name, product_path(product) %></h5>
               </td>
             <% end %>
           <% end %>
-        </div>
-      </div>
       </tr>
     <% end %>
   <% end %>

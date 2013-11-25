@@ -1,5 +1,9 @@
 ECommerce::Application.routes.draw do
 
+  resources :galleries do
+    resources :photos
+  end
+  
   root  'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/signin',  to: 'sessions#new',         via: 'get'

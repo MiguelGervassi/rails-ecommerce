@@ -3,6 +3,7 @@
 <table>
   <thead>
     <tr>
+      <th>id</th>
       <th>Name</th>
       <th>Price</th>
       <th>Description</th>
@@ -15,9 +16,11 @@
   <tbody>
     <% @products.each do |product| %>
       <tr>
+        <td><%= product.id %></td>
         <td><%= product.name %></td>
         <td><%= product.price %></td>
         <td><%= product.description %></td>
+        <td><%= link_to 'View Gallery', gallery_path(product.gallery) %></td>
         <td><%= link_to 'Show', product %></td>
         <td><%= link_to 'Edit', edit_product_path(product) %></td>
         <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>

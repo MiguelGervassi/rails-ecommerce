@@ -11,13 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131108121859) do
+ActiveRecord::Schema.define(version: 20131120023334) do
 
   create_table "carts", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "purchased_at"
   end
+
+  create_table "galleries", force: true do |t|
+    t.integer  "product_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "galleries", ["product_id"], name: "index_galleries_on_product_id"
 
   create_table "line_items", force: true do |t|
     t.integer  "product_id"
@@ -39,10 +47,8 @@ ActiveRecord::Schema.define(version: 20131108121859) do
     t.datetime "updated_at"
   end
 
-  create_table "products", force: true do |t|
-    t.string   "name"
-    t.decimal  "price"
-    t.text     "description"
+  create_table "photos", force: true do |t|
+    t.integer  "gallery_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "photo_file_name"
@@ -50,6 +56,19 @@ ActiveRecord::Schema.define(version: 20131108121859) do
     t.integer  "photo_file_size"
     t.datetime "photo_updated_at"
   end
+
+  add_index "photos", ["gallery_id"], name: "index_photos_on_gallery_id"
+
+  create_table "products", force: true do |t|
+    t.string   "name"
+    t.decimal  "price"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "gallery_id"
+  end
+
+  add_index "products", ["gallery_id"], name: "index_products_on_gallery_id"
 
   create_table "users", force: true do |t|
     t.string   "name"

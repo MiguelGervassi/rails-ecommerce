@@ -1,0 +1,34 @@
+<%
+  args = (@photo.nil?)? [@photo] : [@gallery, @photo]
+  path_url = (@photo.nil? == false)? gallery_photos_path(@gallery) : gallery_photo_path(@gallery, @photo)
+%>
+
+<%= form_for(args, :path => path_url, :html => { :multipart => true }) do |f| %>
+  <% if @photo.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@photo.errors.count, "error") %> prohibited this photo from being saved:</h2>
+
+      <ul>
+      <% @photo.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h3>Current Photo:</h3></br>
+  <%= image_tag @photo.photo.url(:small) %></br>
+  <h5><%= @photo.photo_file_name %></h5>
+
+
+  <div class="field">
+    <%= f.hidden_field :gallery_id, :value => @gallery.id %>
+  </div>
+  <%= f.fields_for :photos do |receipt| %>
+      <%= receipt.file_field :photo %>
+  <% end %>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+
+<% end %>

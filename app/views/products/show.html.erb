@@ -1,21 +1,32 @@
 <p id="notice"><%= notice %></p>
 
-<%= image_tag @product.photo.url(:small) %>
 
 <p>
-  <strong>Name:</strong>
-  <%= @product.name %>
+  <h3><%= @product.name %> Information</h3>
 </p>
 
-<p>
-  <strong>Price:</strong>
-  <%= @product.price %>
-</p>
+<table>
+<tr class="product-gallery-grid">
+<% @product.gallery.photos.each do |photo| %>
+  <td>
+    <div class="product-gallery">
+    <%= image_tag photo.photo.url(
+    if photo == @product.gallery.photos.first
+      :large
+    else
+      :small
+    end
+      ) %><br>
+    </div>
+  </td>
+<% end %>
+</tr>
+</table>
 
-<p>
-  <strong>Description:</strong>
-  <%= @product.description %>
-</p>
+  <h5><strong>Customer Review</strong></h5>
+  <h5><strong>BUY NEW! </strong><%= @product.price %></h5>
+  <h5><strong>Description:</strong></h5></p>
+  <%= sanitize(@product.description) %>
 
 <%= form_tag line_items_path(product_id: @product)  do %>
 <%= text_field_tag :quantity, '1', size: 4 %>
